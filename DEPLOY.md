@@ -70,7 +70,13 @@ Create the volume: `fly volumes create qna_data --region <your-region> --size 1`
 
 ## Option 4: Vercel (FastAPI)
 
-Vercel expects a module-level ASGI **`app`** in `app.py` (or `main.py`, etc.). This repo’s root **`app.py`** re-exports `from backend.main import app` so `vercel build` can detect it.
+This repo defines the app in three ways so `vercel build` can find it:
+
+1. **`pyproject.toml`** — `[project.scripts] app = "backend.main:app"` (recommended by Vercel).
+2. **Root `main.py` and `app.py`** — assign `app = fastapi_app` (some scanners only detect an assignment, not `from … import app`).
+3. **`api/main.py`** — same pattern; path appears in Vercel’s allowed entrypoint list.
+
+**Project root:** connect the Git repo whose root contains `pyproject.toml` and `backend/` (this folder). If Vercel’s **Root Directory** is wrong, detection fails even with the files above.
 
 **Limits:** Vercel runs your API as a **serverless function**. SQLite files and uploaded PDFs **do not persist** reliably; use **Render / Docker / Fly** if you need a normal disk-backed app.
 

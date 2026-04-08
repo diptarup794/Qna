@@ -1,0 +1,10 @@
+# Vercel reads [project.scripts] to locate the FastAPI ASGI app.
+# https://vercel.com/docs/frameworks/backend/fastapi
+[project]
+name = "qna-pdf-assistant"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = []
+
+[project.scripts]
+app = "backend.main:app"

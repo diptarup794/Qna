@@ -9,6 +9,9 @@ FastAPI backend + static web UI: upload PDFs, ask questions (Groq), multi-docume
 ├── Dockerfile           # Production container (Render / Docker)
 ├── render.yaml          # Render Blueprint (optional one-click)
 ├── docker-compose.yml   # Local Docker + SQLite volume
+├── pyproject.toml       # Vercel: [project.scripts] app = backend.main:app
+├── main.py              # Vercel: root ASGI entry alias
+├── api/main.py          # Vercel: alternate entry path
 ├── requirements.txt
 ├── app.py               # Local dev: uvicorn with reload
 ├── backend/             # FastAPI app

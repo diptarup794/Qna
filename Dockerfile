@@ -21,9 +21,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get autoremove -y --purge \
     && rm -rf /var/lib/apt/lists/*
 
+COPY pyproject.toml main.py app.py ./
+COPY api ./api
 COPY backend ./backend
 COPY static ./static
-COPY app.py .
 
 RUN mkdir -p /app/data
 

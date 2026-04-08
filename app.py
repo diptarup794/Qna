@@ -15,7 +15,10 @@ Serverless limits: SQLite and uploads do not persist — prefer Render/Docker fo
 """
 import uvicorn
 
-from backend.main import app
+# Explicit ``app =`` so static entrypoint scanners (e.g. Vercel) see a bound name.
+from backend.main import app as fastapi_app
+
+app = fastapi_app
 
 __all__ = ["app"]
 
