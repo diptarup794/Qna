@@ -1,0 +1,15 @@
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: sqlite:////app/data/qna.db
+    volumes:
+      - qna_data:/app/data
+    restart: unless-stopped
+
+volumes:
+  qna_data:
