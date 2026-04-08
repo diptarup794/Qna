@@ -68,7 +68,17 @@ Create the volume: `fly volumes create qna_data --region <your-region> --size 1`
 
 ---
 
-## Option 4: Render
+## Option 4: Vercel (FastAPI)
+
+Vercel expects a module-level ASGI **`app`** in `app.py` (or `main.py`, etc.). This repo’s root **`app.py`** re-exports `from backend.main import app` so `vercel build` can detect it.
+
+**Limits:** Vercel runs your API as a **serverless function**. SQLite files and uploaded PDFs **do not persist** reliably; use **Render / Docker / Fly** if you need a normal disk-backed app.
+
+Optional: put extra static assets under **`public/`** for CDN delivery ([Vercel FastAPI static docs](https://vercel.com/docs/frameworks/backend/fastapi)).
+
+---
+
+## Option 5: Render
 
 **Blueprint:** In the Render dashboard, choose **New → Blueprint** and connect this repo; it will read `render.yaml` (Docker + 1 GB disk at `/app/data` for SQLite). Set `GROQ_API_KEY` when prompted.
 
@@ -85,3 +95,17 @@ Put **Caddy** or **nginx** in front for TLS, or use the platform’s managed HTT
 ## Health check
 
 `GET /api/health` — use for load balancer or uptime checks.
+
+---
+
+## Build failed (exit code 1)
+
+1. **Open the full build log** on Render (Deploy → failed deploy → logs). Scroll for the first `error:` line.
+
+2. **Native compile errors** (`httptools`, `uvloop`, `gcc`, `Failed building wheel`): the `Dockerfile` in this repo installs `build-essential` during `pip install` so slim images can compile those dependencies. Push the latest `Dockerfile` and redeploy.
+
+3. **`COPY failed: file not found`**: the paths `backend/`, `static/`, `requirements.txt`, or `app.py` are missing from **Git**. Render only sees committed files. Run `git status`, add and commit them, then push.
+
+4. **Wrong root**: if the repo root is a parent folder, set **Settings → Root Directory** to `Qna` (or your app folder) so `Dockerfile` and `backend/` exist under that path.
+
+5. **Blueprint + disk on Free**: if provisioning fails (not always during “build”), try a **Starter** instance or create a **Web Service** manually without a disk for a quick test (SQLite will be ephemeral).
