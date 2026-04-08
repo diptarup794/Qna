@@ -1,5 +1,9 @@
 # Deploying QnA PDF Assistant
 
+**Ideal layout:** this directory **is** the Git repository root (`Dockerfile`, `render.yaml`, `backend/`, `static/` at top level).
+
+**Monorepo:** if the Git root is a parent folder, set Render **Root Directory** to this app folder (e.g. `Qna`) so `./Dockerfile` and the build context resolve correctly.
+
 ## Prerequisites
 
 - `SECRET_KEY` — long random string (e.g. `openssl rand -hex 32`)
